@@ -8,7 +8,3 @@ app = Chalice(app_name='bountiful-api')
 app.register_blueprint(user_routes)
 app.register_blueprint(login_routes)
 app.register_blueprint(bounty_routes)
-
-@app.route('/')
-def index():
-    return {'hello': 'world'}
