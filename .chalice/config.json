@@ -4,6 +4,10 @@
   "stages": {
     "dev": {
       "api_gateway_stage": "dev"
+      "DB_HOST": "bountiful-db.cmw6eaixtkna.us-east-2.rds.amazonaws.com",
+      "DB_PORT": "1964"
+      "DB_USER": "zpaksi"
+      "DB_PASS": "Div129690!"
     }
   }
 }
