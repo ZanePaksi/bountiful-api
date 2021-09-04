@@ -1,11 +1,6 @@
 {
   "resources": [
     {
-      "name": "managed-layer",
-      "resource_type": "lambda_layer",
-      "layer_version_arn": "arn:aws:lambda:us-east-2:981391928065:layer:bountiful-api-dev-managed-layer:22"
-    },
-    {
       "name": "default-role",
       "resource_type": "iam_role",
       "role_arn": "arn:aws:iam::981391928065:role/bountiful-api-dev",
