@@ -8,8 +8,8 @@ class UserService:
         self.logger = logging.getLogger("User Service")
         self.client = client
 
-    def get_all_users(self):
-        users = self.client.get_all_users()
+    def get_all_users(self, search_parameters={}):
+        users = self.client.get_all_users(search_parameters)
         return [self.__build_user(user) for user in users]
 
     def get_user_by_id(self, id):
@@ -33,7 +33,8 @@ user_service = UserService(UserClient())
 
 @user_routes.route('/users', methods=['GET'])
 def get_users():
-    users = user_service.get_all_users()
+    search_parameters = user_routes.current_request.query_params
+    users = user_service.get_all_users(search_parameters)
     return json.dumps(users, indent=4)
 
 @user_routes.route('/users', methods=['POST'])

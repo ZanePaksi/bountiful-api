@@ -1,17 +1,19 @@
 from chalice import Chalice
 import os, logging, psycopg2
 from .access import db_connect, db_cursor
+from .search_builder import UserSearchBuilder
 
 class UserClient:
 
     def __init__(self):
         self.logger = logging.getLogger("User Client")
+        self.search_builder = UserSearchBuilder('users')
 
-    def get_all_users(self):
+    def get_all_users(self, search_parameters={}):
         users = []
         with db_cursor(os.environ) as c:
             self.create_user_table(c)
-            c.execute("SELECT * FROM users;")
+            c.execute(self.search_builder.build_search_query(search_parameters))
             users = c.fetchall()
         return users
 

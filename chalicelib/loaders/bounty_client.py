@@ -1,16 +1,18 @@
 from chalice import Chalice
 import os, logging, psycopg2
 from .access import db_cursor
+from .search_builder import BountySearchBuilder
 
 class BountyClient:
 
     def __init__(self):
         self.logger = logging.getLogger("Bounty Client")
+        self.search_builder = BountySearchBuilder('bounties')
 
     def get_all_bounties(self, search_parameters={}):
         bounties = []
         with db_cursor(os.environ) as c:
-            c.execute(self.__build_search_query(search_parameters))
+            c.execute(self.search_builder.build_search_query(search_parameters))
             bounties = c.fetchall()
         return bounties
 
@@ -20,27 +22,6 @@ class BountyClient:
             c.execute(f"SELECT * FROM bounties WHERE bounty_id = {id};")
             bounty = c.fetchone()
         return bounty if bounty else None
-
-    def __build_search_query(self, search_parameters={}):
-        base_query = "SELECT * FROM bounties"
-        if search_parameters:
-            conditionals = self.__get_conditionals(search_parameters)
-            if conditionals:
-                base_query = f"{base_query} WHERE {' AND '.join(conditionals)}"
-        print(base_query)
-        return base_query + ';'
-
-    def __get_conditionals(self, search_parameters={}):
-        conditionals = []
-        if 'hunter' in search_parameters:
-            conditionals.append(f"hunter_id = {search_parameters['hunter']}")
-        if 'creator' in search_parameters:
-            conditionals.append(f"creator_id = {search_parameters['creator']}")
-        if 'value:above' in search_parameters and int(search_parameters['value:above']) > 0:
-            conditionals.append(f"value >= {search_parameters['value:above']}")
-        # if 'value:below' in search_parameters and self.__verify_value_params(search_parameters):
-        #     conditionals.append(f"value <= {search_parameters['value:below']}")
-        return conditionals
 
     def add_new_bounty(self, bounty):
         with db_connect(os.environ) as conn:
