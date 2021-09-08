@@ -16,6 +16,10 @@ class UserService:
         user = self.client.get_user_by_id(id)
         return self.__build_user(user) if user else None
 
+    def add_new_user(self, user):
+        self.client.add_new_user(user)
+        return user
+
     def __build_user(self, user):
         return {
         'id': user[0],
@@ -33,9 +37,9 @@ def get_users():
     return json.dumps(users, indent=4)
 
 @user_routes.route('/users', methods=['POST'])
-def report_new_user():
+def add_new_user():
     new_user_data = user_routes.current_request.json_body
-    user_service.add_new_users(new_user_data)
+    user_service.add_new_user(new_user_data)
     return json.dumps(new_user_data, indent=4)
 
 @user_routes.route('/users/{user_id}', methods=['GET'])
